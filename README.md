@@ -1,8 +1,5 @@
 # tencent-interview-experience-notes
 
-python input EOFError:python3 stipulate the input function just can be called in father process
-
-Bitmap:！！
 
 线程与进程的区别和联系：
 线程是进程执行运算的最小单位，是在cpu上实际调度的实体对象。线程被称为轻量级进程，只能拥有运行时一些必须的资源，但是可以和同进程的其他线程共享系统资源。
