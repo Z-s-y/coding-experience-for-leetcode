@@ -1,4 +1,4 @@
-# coding-experience-for-leetcode
+# tencent-interview-experience-notes
 
 python input EOFError:python3 stipulate the input function just can be called in father process
 
