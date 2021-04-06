@@ -19,13 +19,21 @@ unordered_map类型的初始化为：
 std::unordered_map<std::int,std::int> M_map;
 成员函数：
 begin()和end()都是返回迭代器；
+
 empty()，若容器为空，返回true；否则false；
+
 size()，返回容器存有的键值对的个数；
+
 可以通过value=map[key]直接通过key值访问value值；
+
 find()，查找以key为键的键值对，如果找到返回迭代器；否则==end()；
+
 insert()，插入新的键值对；emplace()，向容器添加新的键值对，效率比前者高;
+
 erase()，删除指定键值对；
+
 clear()，清空容器；
+
 swap()，交换两个容器的键值对，保证容器的类型完全相同。
 
 
