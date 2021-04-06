@@ -47,5 +47,60 @@ clear()，清空容器；
 
 swap()，交换两个容器的键值对，保证容器的类型完全相同。
 
+设计一个支持在平均 时间复杂度 O(1) 下，执行以下操作的数据结构。
+
+insert(val)：当元素 val 不存在时，向集合中插入该项。
+remove(val)：元素 val 存在时，从集合中移除该项。
+getRandom：随机返回现有集合中的一项。每个元素应该有相同的概率被返回。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/insert-delete-getrandom-o1
+
+通过代码如下：
+#include<unordered_map>
+#include<vector>
+using namespace std;
+
+class RandomizedSet {
+public:
+    /** Initialize your data structure here. */
+    RandomizedSet() {}
+    
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    bool insert(int val) {
+        if(mMap.find(val) == mMap.end()){
+            mMap.emplace(val,mVec.size());
+            mVec.push_back(val);
+            return true;
+        }
+        return false;
+    }
+    
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    bool remove(int val) {
+        if(mMap.find(val) == mMap.end()){
+            return false;
+        }
+        //可以直接删除映射值，将最后一个值赋给当前pos值，并且更新最后一个值的映射索引
+        //原值可以不处理，因为需要删去，内容并不重要！
+        int pos = mMap[val];
+        //需要考虑本身就是最后一个值的情况
+        mVec[pos] = mVec[mVec.size()-1];
+        mMap[mVec[pos]] = pos;
+        mVec.pop_back();
+        mMap.erase(val);
+        return true;
+    }
+    
+    /** Get a random element from the set. */
+    int getRandom() {
+        return mVec[rand()%mVec.size()];
+    }
+
+    private:
+      unordered_map<int,int> mMap;
+      vector<int> mVec;
+};
+
 
 
