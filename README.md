@@ -57,6 +57,10 @@ getRandom：随机返回现有集合中的一项。每个元素应该有相同�
 链接：https://leetcode-cn.com/problems/insert-delete-getrandom-o1
 
 通过代码如下：
+
+/** 执行用时：44 ms, 在所有 C++ 提交中击败了81.33%的用户
+    内存消耗：22.1 MB, 在所有 C++ 提交中击败了52.10%的用户 */
+
 #include<unordered_map>
 #include<vector>
 using namespace std;
