@@ -41,7 +41,6 @@ swap()，交换两个容器的键值对，保证容器的类型完全相同。
 /** 执行用时：44 ms, 在所有 C++ 提交中击败了81.33%的用户
     内存消耗：22.1 MB, 在所有 C++ 提交中击败了52.10%的用户 */
 
-
     /** Initialize your data structure here. */
     RandomizedSet() {}
     
