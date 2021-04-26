@@ -180,8 +180,7 @@ int nthUglyNumber(int n) {
     return *i;
 }
 
-private:
-   set<double> St;
+set<double> St;
        
        
 <--------2021-04-13-------->
