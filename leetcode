@@ -15,8 +15,6 @@ insert(val)：当元素 val 不存在时，向集合中插入该项。
 remove(val)：元素 val 存在时，从集合中移除该项。
 getRandom：随机返回现有集合中的一项。每个元素应该有相同的概率被返回。
 
-来源：力扣（LeetCode）
-链接：https://leetcode-cn.com/problems/insert-delete-getrandom-o1
 
 核心办法：
 通过hash函数完成元素值到下标的映射，这样在检索就可以通过hash映射在常数时间内找到对应值的索引，完成查找这一动作。
@@ -43,43 +41,43 @@ swap()，交换两个容器的键值对，保证容器的类型完全相同。
 /** 执行用时：44 ms, 在所有 C++ 提交中击败了81.33%的用户
     内存消耗：22.1 MB, 在所有 C++ 提交中击败了52.10%的用户 */
 
-    /** Initialize your data structure here. */
-    RandomizedSet() {}
-    
-    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
-    bool insert(int val) {
-        if(mMap.find(val) == mMap.end()){
-            mMap.emplace(val,mVec.size());
-            mVec.push_back(val);
-            return true;
-        }
-        return false;
-    }
-    
-    /** Removes a value from the set. Returns true if the set contained the specified element. */
-    bool remove(int val) {
-        if(mMap.find(val) == mMap.end()){
-            return false;
-        }
-        //可以直接删除映射值，将最后一个值赋给当前pos值，并且更新最后一个值的映射索引
-        //原值可以不处理，因为需要删去，内容并不重要！
-        int pos = mMap[val];
-        //需要考虑本身就是最后一个值的情况
-        mVec[pos] = mVec[mVec.size()-1];
-        mMap[mVec[pos]] = pos;
-        mVec.pop_back();
-        mMap.erase(val);
+/** Initialize your data structure here. */
+RandomizedSet() {}
+
+/** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+bool insert(int val) {
+    if(mMap.find(val) == mMap.end()){
+        mMap.emplace(val,mVec.size());
+        mVec.push_back(val);
         return true;
     }
-    
-    /** Get a random element from the set. */
-    int getRandom() {
-        return mVec[rand()%mVec.size()];
-    }
+    return false;
+}
 
-    private:
-      unordered_map<int,int> mMap;
-      vector<int> mVec;
+/** Removes a value from the set. Returns true if the set contained the specified element. */
+bool remove(int val) {
+    if(mMap.find(val) == mMap.end()){
+        return false;
+    }
+    //可以直接删除映射值，将最后一个值赋给当前pos值，并且更新最后一个值的映射索引
+    //原值可以不处理，因为需要删去，内容并不重要！
+    int pos = mMap[val];
+    //需要考虑本身就是最后一个值的情况
+    mVec[pos] = mVec[mVec.size()-1];
+    mMap[mVec[pos]] = pos;
+    mVec.pop_back();
+    mMap.erase(val);
+    return true;
+}
+
+/** Get a random element from the set. */
+int getRandom() {
+    return mVec[rand()%mVec.size()];
+}
+
+private:
+  unordered_map<int,int> mMap;
+  vector<int> mVec;
       
       
       
@@ -91,8 +89,6 @@ swap()，交换两个容器的键值对，保证容器的类型完全相同。
 在传递给函数之前，nums 在预先未知的某个下标 k（0 <= k < nums.length）上进行了 旋转，使数组变为 [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]（下标从 0 开始计数）。例如，[0,1,2,4,5,6,7] 在下标 3 处经旋转后可能变为 [4,5,6,7,0,1,2] 。
 给你旋转后的数组 nums 和一个整数 target ，如果 nums 中存在这个目标值 target ，则返回它的下标，否则返回 -1 。
 
-来源：力扣（LeetCode）
-链接：https://leetcode-cn.com/problems/search-in-rotated-sorted-array
 
 非经典二分题：
 二分题需要注意的细节是：必须能够跳出循环，一般判断在left<=right里面执行程序即可。
@@ -108,36 +104,36 @@ swap()，交换两个容器的键值对，保证容器的类型完全相同。
 /** 执行用时：4 ms, 在所有 C++ 提交中击败了79.03%的用户
     内存消耗：10.8 MB, 在所有 C++ 提交中击败了59.32%的用户*/
 
-    int left = 0;
-    int right = nums.size()-1;
+int left = 0;
+int right = nums.size()-1;
 
-    while(left <= right){
-        int mid = (left + right) / 2;
-        //printf("%d,%d,%d,%d\n",left,mid,right,nums[mid]==target);
-        //printf("%d,%d\n",target,nums[mid]);
-        if(nums[mid] == target){
-            return mid;
-        } 
-        if(nums[left] <= nums[mid]){
-            if(nums[mid] >= target && nums[left] <= target){
-                right = mid;
-                //printf("1\n");
-            }else{
-                left = mid + 1;
-                //printf("2\n");
-            }
+while(left <= right){
+    int mid = (left + right) / 2;
+    //printf("%d,%d,%d,%d\n",left,mid,right,nums[mid]==target);
+    //printf("%d,%d\n",target,nums[mid]);
+    if(nums[mid] == target){
+        return mid;
+    } 
+    if(nums[left] <= nums[mid]){
+        if(nums[mid] >= target && nums[left] <= target){
+            right = mid;
+            //printf("1\n");
         }else{
-            if(nums[mid] <= target && nums[right] >= target){
-                left = mid;
-                //printf("3\n");
-            }else{
-                right = mid - 1;
-                //printf("4\n");
-            }
+            left = mid + 1;
+            //printf("2\n");
         }
-        //printf("%d,%d,%d\n",left,mid,right);
+    }else{
+        if(nums[mid] <= target && nums[right] >= target){
+            left = mid;
+            //printf("3\n");
+        }else{
+            right = mid - 1;
+            //printf("4\n");
+        }
     }
-    return -1;
+    //printf("%d,%d,%d\n",left,mid,right);
+}
+return -1;
     
     
 <--------2021-04-11-------->
@@ -169,23 +165,23 @@ set内的值不能直接被改变，底层采用高效的平衡二叉树实现�
 /**执行用时：140 ms, 在所有 C++ 提交中击败了17.16%的用户
    内存消耗：28.9 MB, 在所有 C++ 提交中击败了12.56%的用户*/
    
-   int nthUglyNumber(int n) {
-        St.insert(1);
-        int cnt = 1;
-        auto i = St.begin();
-        for(; i != St.end(); ++i){
-            if(cnt == n) break;
-            St.insert(2*(*i));
-            St.insert(3*(*i));
-            St.insert(5*(*i));
-            ++cnt;
-        }
-        
-        return *i;
+int nthUglyNumber(int n) {
+    St.insert(1);
+    int cnt = 1;
+    auto i = St.begin();
+    for(; i != St.end(); ++i){
+        if(cnt == n) break;
+        St.insert(2*(*i));
+        St.insert(3*(*i));
+        St.insert(5*(*i));
+        ++cnt;
     }
 
-    private:
-       set<double> St;
+    return *i;
+}
+
+private:
+   set<double> St;
        
        
 <--------2021-04-13-------->
@@ -203,39 +199,39 @@ set内的值不能直接被改变，底层采用高效的平衡二叉树实现�
 /**执行用时：4 ms, 在所有 C++ 提交中击败了98.51%的用户
    内存消耗：10.7 MB, 在所有 C++ 提交中击败了89.68%的用户*/
    
-   static bool cmp(const int &a,const int &b){
-        long baseA = 1;
-        long baseB = 1;
-        int sa = a;
-        int sb = b;
-        if(sa == 0) baseA = 10;
-        while(sa > 0){
-            baseA *= 10;
-            sa /= 10;
-        }
-        if(sb == 0) baseB = 10;
-        while(sb > 0){
-            baseB *= 10;
-            sb /= 10;
-        }
-        return a*baseB+b>b*baseA+a;
+static bool cmp(const int &a,const int &b){
+    long baseA = 1;
+    long baseB = 1;
+    int sa = a;
+    int sb = b;
+    if(sa == 0) baseA = 10;
+    while(sa > 0){
+        baseA *= 10;
+        sa /= 10;
     }
-
-    string largestNumber(vector<int>& nums) {
-        sort(nums.begin(),nums.end(),cmp);
-        /**for(int i=0;i<nums.size();++i){
-            printf("%d\n",nums[i]);
-        }*/
-
-        //这一步最绝！！！
-        if(nums[0] == 0) return "0";
-
-        string res;
-        for(int i=0;i<nums.size();++i){
-            res += to_string(nums[i]);
-        }
-        return res;
+    if(sb == 0) baseB = 10;
+    while(sb > 0){
+        baseB *= 10;
+        sb /= 10;
     }
+    return a*baseB+b>b*baseA+a;
+}
+
+string largestNumber(vector<int>& nums) {
+    sort(nums.begin(),nums.end(),cmp);
+    /**for(int i=0;i<nums.size();++i){
+        printf("%d\n",nums[i]);
+    }*/
+
+    //这一步最绝！！！
+    if(nums[0] == 0) return "0";
+
+    string res;
+    for(int i=0;i<nums.size();++i){
+        res += to_string(nums[i]);
+    }
+    return res;
+}
     
  
  
@@ -261,45 +257,45 @@ dp的时候还要确定区间的左右端点全覆盖，因为是对长度进行
 /**执行用时：264 ms, 在所有 C++ 提交中击败了52.27%的用户
    内存消耗：11.4 MB, 在所有 C++ 提交中击败了67.45%的用户*/
    
-   string longestPalindrome(string s) {
-        int len = s.size();
-        //printf("%d\n",len);
+string longestPalindrome(string s) {
+    int len = s.size();
+    //printf("%d\n",len);
 
-        int lenmax = 1;
-        int left = 0;
+    int lenmax = 1;
+    int left = 0;
 
-        for(int i=0;i<len;++i)
-            flag[i][i] = 1;
+    for(int i=0;i<len;++i)
+        flag[i][i] = 1;
 
-        for(int i=0;i<len-1;++i){
-            if(s[i] == s[i+1]){
-                flag[i][i+1] = 1;
-                lenmax = 2;
-                left = i;
-            }
+    for(int i=0;i<len-1;++i){
+        if(s[i] == s[i+1]){
+            flag[i][i+1] = 1;
+            lenmax = 2;
+            left = i;
         }
+    }
 
-        for(int l=3;l<=len;++l){
-            int y= len-l;
-            for(int x=0;x<=y;++x){
-                if(flag[x+1][x+l-2]){
-                    if(s[x]==s[x+l-1]){
-                        flag[x][x+l-1]=1;
-                        if(l>lenmax){
-                            lenmax = l;
-                            left = x;
-                        }
+    for(int l=3;l<=len;++l){
+        int y= len-l;
+        for(int x=0;x<=y;++x){
+            if(flag[x+1][x+l-2]){
+                if(s[x]==s[x+l-1]){
+                    flag[x][x+l-1]=1;
+                    if(l>lenmax){
+                        lenmax = l;
+                        left = x;
                     }
                 }
             }
         }
-        
-        return s.substr(left,lenmax);
-
     }
 
-    private:
-      int flag[1005][1005];
+    return s.substr(left,lenmax);
+
+}
+
+private:
+  int flag[1005][1005];
       
       
 <--------2021-04-20-------->
@@ -320,16 +316,16 @@ dp的时候还要确定区间的左右端点全覆盖，因为是对长度进行
 /**执行用时：24 ms, 在所有 C++ 提交中击败了67.93%的用户
    内存消耗：22.4 MB, 在所有 C++ 提交中击败了67.60%的用户*/
    
-   int maxSubArray(vector<int>& nums) {
-        int sum = 0;
-        int mx = -200;
-        for(int i=0;i<nums.size();++i){
-            if(sum < 0) sum = 0;
-            sum += nums[i];
-            if(mx < sum) mx = sum;
-        }
-        return mx;
+int maxSubArray(vector<int>& nums) {
+    int sum = 0;
+    int mx = -200;
+    for(int i=0;i<nums.size();++i){
+        if(sum < 0) sum = 0;
+        sum += nums[i];
+        if(mx < sum) mx = sum;
     }
+    return mx;
+}
     
 
 数组中出现超过半数的数字：摩尔投票
@@ -357,22 +353,88 @@ dp的时候还要确定区间的左右端点全覆盖，因为是对长度进行
 /**执行用时：44 ms, 在所有 C++ 提交中击败了7.08%的用户
    内存消耗：18.4 MB, 在所有 C++ 提交中击败了16.96%的用户*/
    
-   int res = 0;
-        for(int i=0;i<nums.size();++i){
-            if(mMap.find(nums[i])==mMap.end()){
-                mMap[nums[i]] = 0;
-            }
-            int cnt = mMap[nums[i]];
-            mMap[nums[i]] = cnt + 1;
-            if(cnt + 1 > nums.size()/2){
-                res = nums[i];
-                break;
-            }
+int res = 0;
+    for(int i=0;i<nums.size();++i){
+        if(mMap.find(nums[i])==mMap.end()){
+            mMap[nums[i]] = 0;
         }
-        return res;
+        int cnt = mMap[nums[i]];
+        mMap[nums[i]] = cnt + 1;
+        if(cnt + 1 > nums.size()/2){
+            res = nums[i];
+            break;
+        }
     }
+    return res;
+}
+
+unordered_map<int,int> mMap;
     
-    unordered_map<int,int> mMap;
+    
+    
+<--------2021-04-20-------->
+
+最小生成树的遍历
+
+题目如下：
+n 座城市，从 0 到 n-1 编号，其间共有 n-1 条路线。因此，要想在两座不同城市之间旅行只有唯一一条路线可供选择（路线网形成一颗树）。去年，交通运输部决定重新规划路线，以改变交通拥堵的状况。
+路线用 connections 表示，其中 connections[i] = [a, b] 表示从城市 a 到 b 的一条有向路线。
+今年，城市 0 将会举办一场大型比赛，很多游客都想前往城市 0 。
+请你帮助重新规划路线方向，使每个城市都可以访问城市 0 。返回需要变更方向的最小路线数。
+题目数据 保证 每个城市在重新规划路线方向后都能到达城市 0 。
+
+
+核心思想：
+一开始的思路以为给出的序列是顺序的，也就是说不会出现两个点都不在可达0城市的集合这种情况，相当于这条边的两个点都是未知状态。
+这个思路在以下样例中出现问题：
+3  [[1,2],[2,0]]
+因为出现[1,2]这条边的时候无法进行处理。
+修改之后的思路很简单，1、就是跳过这样的边。
+本来以为这个思路不会成功，因为在最糟糕的情况下，复杂度是O(n^2)，但是竟然过了，而且时间喜人。
+查询了vector的具体用法之后，发现vector出了使用pop_back()删除元素，还提供了两种删除元素的办法。
+2、直接erase()，该方法会将删除元素的后面所有元素向前移动。
+3、先调用swap(beg)函数将删除元素和最后一个元素交换，再使用pop_back()删除最后的元素。这种方法适用于对顺序不敏感的情况。
+
+三种方法比较：
+1、/**执行用时：268 ms, 在所有 C++ 提交中击败了92.63%的用户
+      内存消耗：70 MB, 在所有 C++ 提交中击败了91.05%的用户*/
+2、/**执行结果：超出时间限制*/
+3、/**执行用时：316 ms, 在所有 C++ 提交中击败了67.37%的用户
+      内存消耗：69.9 MB, 在所有 C++ 提交中击败了91.05%的用户*/
+令人吃惊的是，竟然是方案一更快。
+猜测原因是unordered_set的对元素的查询速度要远远高于vector删除最后一个元素调整连续空间的时间？
+在实验3中发现swap是可以对基础元素进行交换，直接采用swap(connections[0],connections[connections.size()-1])会报错。
+
+
+代码1如下：
+   
+int minReorder(int n, vector<vector<int>>& connections) {
+    S.insert(0);
+    int res = 0;
+    int i = 0;
+    while(true){
+        if(S.find(connections[i][0])==S.end()&&S.find(connections[i][1])==S.end()){
+            i = (i+1)%connections.size();
+            continue;
+        }
+        if(S.find(connections[i][0])!=S.end()){
+            res += 1;
+            //printf("add:%d %d\n",connections[i][0],connections[i][1]);
+        }
+        //无论是不是满足条件都需要把引入的点包含到可达集合
+        //printf("hefa:%d %d\n",connections[i][0],connections[i][1]);
+        S.insert(connections[i][0]);
+        S.insert(connections[i][1]);
+        swap(connections[i][0],connections[connections.size()-1][0]);
+        swap(connections[i][1],connections[connections.size()-1][1]);
+        connections.pop_back();
+        if(connections.size() == 0) break;
+        i = (i+1)%connections.size();
+
+    }
+    return res;
+}
+unordered_set<int> S;
     
  
 
