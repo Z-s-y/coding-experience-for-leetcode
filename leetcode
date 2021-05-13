@@ -380,8 +380,7 @@ n 座城市，从 0 到 n-1 编号，其间共有 n-1 条路线。因此，要�
 路线用 connections 表示，其中 connections[i] = [a, b] 表示从城市 a 到 b 的一条有向路线。
 今年，城市 0 将会举办一场大型比赛，很多游客都想前往城市 0 。
 请你帮助重新规划路线方向，使每个城市都可以访问城市 0 。返回需要变更方向的最小路线数。
-题目数据 保证 每个城市在重新规划路线方向后都能到达城市 0 。
-
+题目数据保证每个城市在重新规划路线方向后都能到达城市 0 。
 
 核心思想：
 一开始的思路以为给出的序列是顺序的，也就是说不会出现两个点都不在可达0城市的集合这种情况，相当于这条边的两个点都是未知状态。
@@ -436,7 +435,97 @@ int minReorder(int n, vector<vector<int>>& connections) {
 unordered_set<int> S;
     
  
+<--------2021-05-13-------->
 
+异或操作题
+异或操作的根本特点：该操作按位执行，与0异或结果是其本身；与1异或结果为取反。与自己异或为零，这一点也是进行异或操作反推的关键操作。
+
+题目1如下：
+
+给你一个整数数组 perm ，它是前 n 个正整数的排列，且 n 是个奇数 。
+它被加密成另一个长度为 n - 1 的整数数组 encoded ，满足 encoded[i] = perm[i] XOR perm[i + 1] 。比方说，如果 perm = [1,3,2] ，那么 encoded = [2,1] 。
+给你 encoded 数组，请你返回原始数组 perm 。题目保证答案存在且唯一。
+
+核心思想：
+为了推出整个原始序列，需要得到其中某一个元素值即可。这里我们考虑 perm[0] 的值。
+因为 perm 数组是一个 1~n 的全排列，异或操作是可交换的，也就是顺序并不影响最终结果。
+那么 perm 数组的所有元素结果为 perm[0]^……^perm[n-1] = 1^2^……^n。
+上述所提到的与本身的异或结果为0，求解出 perm[0] 的思路就是计算出除了 perm[0] 的其他元素的异或值
+题目重点提出n是奇数，那么观察 encoded 数组。
+encoded[0] = perm[0]^perm[1]，encoded[1] = perm[1]^perm[2]，encoded[2] = perm[2]^perm[3]，
+encoded[3] = perm[3]^perm[4]，…… ，encoded[n-2] = perm[n-2]^perm[n-1]。
+我们可以知道将encoded[1]^encoded[3]^……^encoded[n-2]就可以得到perm[1]^perm[2]^……^perm[n-2]^perm[n-1]。
+那么将上述两个值进行异或得到的就是perm[0]。
+
+代码1如下：
+/**执行用时：140 ms, 在所有 C++ 提交中击败了95.18%的用户
+   内存消耗：102.9 MB, 在所有 C++ 提交中击败了5.32%的用户*/
+
+class Solution {
+public:
+    vector<int> decode(vector<int>& encoded){
+        int remove_0_res = 0;
+        for(int i=0;i<encoded.size();++i){
+            if(i%2==1){
+                remove_0_res = remove_0_res^encoded[i];
+            }
+        }
+        int all_res = 0;
+        for(int i=1;i<=encoded.size()+1;++i){
+            all_res = all_res^i;
+        }
+        //printf("%d %d\n",remove_0_res,all_res);
+
+        ans.push_back(remove_0_res^all_res);
+        for(int i=0;i<encoded.size();++i){
+            ans.push_back(ans.back()^encoded[i]);
+        }
+        
+        return ans;
+
+    }
+    vector<int> ans;
+};
+
+题目2如下：
+
+有一个正整数数组 arr，现给你一个对应的查询数组 queries，其中 queries[i] = [Li, Ri]。
+对于每个查询 i，请你计算从 Li 到 Ri 的 XOR 值（即 arr[Li] xor arr[Li+1] xor ... xor arr[Ri]）作为本次查询的结果。
+并返回一个包含给定查询 queries 所有结果的数组。
+
+核心思想：
+解题核心就是与自己异或为0。
+区间异或值查可以表示 lst[r]^lst[l-1]。
+其中 lst 数组表示前n个元素的异或值。
+
+代码1如下：
+/**执行用时：72 ms, 在所有 C++ 提交中击败了85.64%的用户
+   内存消耗：32.6 MB, 在所有 C++ 提交中击败了18.19%的用户*/
+   
+class Solution {
+public:
+    vector<int> xorQueries(vector<int>& arr, vector<vector<int>>& queries) {
+        int res = 0;
+        for(int i=0;i<arr.size();++i){
+            res = res^arr[i];
+            lst.push_back(res);
+        }
+        for(int i=0;i<queries.size();++i){
+            int r = queries[i][1];
+
+            if(queries[i][0]>0){
+                int l = queries[i][0]-1;
+                ans.push_back(lst[r]^lst[l]);
+            }else{
+                ans.push_back(lst[r]);
+            }
+        }
+        
+        return ans;
+    }
+    vector<int> lst;
+    vector<int> ans;
+};
 
 
 
